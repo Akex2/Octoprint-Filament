@@ -9,8 +9,6 @@ The following needs to be added to the config.yaml:
     gpioOptions: 0
     pauseOptions: 0
 ```
-where XX represent the GPIO pin where your sensor is connected.
-
 Option Descriptions:
 pin = The GPIO Pin, this is in BCM mode, so for pin 26, you'd enter 7 (for GPIO7)
 bounce = The time to wait for the switch to settle, in ms.
