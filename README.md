@@ -10,10 +10,10 @@ The following needs to be added to the config.yaml:
     pauseOptions: 0
 ```
 Option Descriptions:
-pin = The GPIO Pin, this is in BCM mode, so for pin 26, you'd enter 7 (for GPIO7)
-bounce = The time to wait for the switch to settle, in ms.
-gpioOptions = Configure the default GPIO pull_up_down mode. 0 [default] is PULL_DOWN mode. 1 is for PULL_UP mode.
-pauseOptions = Configure the pause action. 0 [default] pauses immediately. 1 waits for the next ZChange event (layer change).
+- pin = The GPIO Pin in BCM mode, so for pin 26, you'd enter 7 (for GPIO7)
+- bounce = The time to wait for the switch to settle, in ms.
+- gpioOptions = Configure the default GPIO pull_up_down mode. 0 [default] is PULL_DOWN mode. 1 is for PULL_UP mode.
+- pauseOptions = Configure the pause action. 0 [default] pauses immediately. 1 waits for the next ZChange event (layer change).
 
 An API is available to check the filament sensor status via a GET method to `/plugin/filament/status` which returns a JSON
 
