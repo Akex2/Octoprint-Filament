@@ -93,6 +93,8 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 			self._logger.debug("Sensor [%s]!"%state)
 			if self._printer.is_printing() and self.PAUSE_OPTIONS != 1:
 				self._printer.toggle_pause_print()
+				self._printer.toggle_home(['x', 'y', 'z'])
+				self._printer.toggle_set_temperature('tool0', '40')
 			elif self._printer.is_printing():
 				self.ZPAUSE = True
 
