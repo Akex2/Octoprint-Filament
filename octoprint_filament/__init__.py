@@ -117,12 +117,12 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 
 				# version check: github repository
 				type="github_release",
-				user="MoonshineSG",
+				user="Akex2",
 				repo="OctoPrint-Filament",
 				current=self._plugin_version,
 
 				# update method: pip
-				pip="https://github.com/MoonshineSG/OctoPrint-Filament/archive/{target_version}.zip"
+				pip="https://github.com/Akex2/OctoPrint-Filament/archive/{target_version}.zip"
 			)
 		)
 
