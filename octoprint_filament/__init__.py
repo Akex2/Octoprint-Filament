@@ -13,8 +13,8 @@ import logging
 import logging.handlers
 import RPi.GPIO as GPIO
 
-#apiKey = "iJqqpUXVEZiBuxFuv35LQYeigq4Ido0L"
-#p = PushBullet(apiKey)
+apiKey = "iJqqpUXVEZiBuxFuv35LQYeigq4Ido0L"
+pb = PushBullet(apiKey)
 #devices = p.getDevices()
 #contacts = p.getContacts()
 
@@ -101,7 +101,7 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 				self._printer.toggle_pause_print()
 				self._printer.toggle_home(['x', 'y'])
 				self._printer.toggle_set_temperature('tool0', '40')
-				#p.pushNote(devices[0]["iden"], 'Probleme de filament', ' ')
+				push = pb.push_note("Probleme de filament", " ")
 			elif self._printer.is_printing():
 				self.ZPAUSE = True
 
