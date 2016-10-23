@@ -43,7 +43,7 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 		self.ZPAUSE = False # Z-Change Pause Flag
 		self.GPIO_OPTIONS = self._settings.get(["gpioOptions"])
 		self.APIKEY = self._settings.get(["pushbulletKey"])
-		pb = PushBullet(APIKEY)
+		self.pb = PushBullet(APIKEY)
 		self._logger.info("pushbullet api-key [%s]..."%self.APIKEY)
 		if self.GPIO_OPTIONS == 1:
 			self._logger.info("Filament Sensor Plugin setup on GPIO Options set to [%s]..."%self.GPIO_OPTIONS)
@@ -102,9 +102,9 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 			self._logger.debug("Sensor [%s]!"%state)
 			if self._printer.is_printing() and self.PAUSE_OPTIONS != 1:
 				self._printer.toggle_pause_print()
-				self._printer.toggle_home(["x", "y"])
-				self._printer.toggle_set_temperature("tool0", 40)
-				push = pb.push_note("Probleme de filament", " ")
+				self._printer.home(["x", "y"])
+				self._printer.set_temperature("tool0", 40)
+				push = self.pb.push_note("Probleme de filament", " ")
 			elif self._printer.is_printing():
 				self.ZPAUSE = True
 
