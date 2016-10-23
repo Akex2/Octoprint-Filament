@@ -7,14 +7,14 @@ import octoprint.util
 
 from octoprint.events import eventManager, Events
 from flask import jsonify, request
-#from pushbullet.pushbullet import PushBullet
+from pushbullet import PushBullet, Listener
 from pushbullet import PushBullet, Listener
 
 import logging
 import logging.handlers
 import RPi.GPIO as GPIO
 
-apiKey = "iJqqpUXVEZiBuxFuv35LQYeigq4Ido0L"
+apiKey = "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
 pb = PushBullet(apiKey)
 #devices = p.getDevices()
 #contacts = p.getContacts()
@@ -100,8 +100,8 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 			self._logger.debug("Sensor [%s]!"%state)
 			if self._printer.is_printing() and self.PAUSE_OPTIONS != 1:
 				self._printer.toggle_pause_print()
-				self._printer.toggle_home(['x', 'y'])
-				self._printer.toggle_set_temperature('tool0', '40')
+				self._printer.toggle_home(["x", "y"])
+				self._printer.toggle_set_temperature("tool0", 40)
 				push = pb.push_note("Probleme de filament", " ")
 			elif self._printer.is_printing():
 				self.ZPAUSE = True
