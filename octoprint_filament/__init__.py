@@ -8,14 +8,13 @@ import octoprint.util
 from octoprint.events import eventManager, Events
 from flask import jsonify, request
 from pushbullet import PushBullet, Listener
-from pushbullet import PushBullet, Listener
 
 import logging
 import logging.handlers
 import RPi.GPIO as GPIO
 
-apiKey = "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
-pb = PushBullet(apiKey)
+#apiKey = "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
+#pb = PushBullet(apiKey)
 #devices = p.getDevices()
 #contacts = p.getContacts()
 
@@ -43,6 +42,9 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 		self.PAUSE_OPTIONS = self._settings.get(["pauseOptions"])
 		self.ZPAUSE = False # Z-Change Pause Flag
 		self.GPIO_OPTIONS = self._settings.get(["gpioOptions"])
+		self.APIKEY = self._settings.get(["pushbulletKey"])
+		pb = PushBullet(APIKEY)
+		self._logger.info("pushbullet api-key [%s]..."%self.APIKEY)
 		if self.GPIO_OPTIONS == 1:
 			self._logger.info("Filament Sensor Plugin setup on GPIO Options set to [%s]..."%self.GPIO_OPTIONS)
 			self.GPIO_OPTIONS = GPIO.PUD_UP
