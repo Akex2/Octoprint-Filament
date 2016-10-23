@@ -43,7 +43,7 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 		self.ZPAUSE = False # Z-Change Pause Flag
 		self.GPIO_OPTIONS = self._settings.get(["gpioOptions"])
 		self.APIKEY = self._settings.get(["pushbulletKey"])
-		self.pb = PushBullet(APIKEY)
+		self.pb = PushBullet(self.APIKEY)
 		self._logger.info("pushbullet api-key [%s]..."%self.APIKEY)
 		if self.GPIO_OPTIONS == 1:
 			self._logger.info("Filament Sensor Plugin setup on GPIO Options set to [%s]..."%self.GPIO_OPTIONS)
