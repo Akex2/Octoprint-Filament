@@ -8,6 +8,7 @@ import octoprint.util
 from octoprint.events import eventManager, Events
 from flask import jsonify, request
 #from pushbullet.pushbullet import PushBullet
+from pushbullet import PushBullet, Listener
 
 import logging
 import logging.handlers
