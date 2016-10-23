@@ -8,6 +8,7 @@ The following needs to be added to the config.yaml:
     bounce: 400
     gpioOptions: 0
     pauseOptions: 0
+    pushbulletKey: xxxxxxxxxxxxxxxx
 ```
 Option Descriptions:
 - pin = The GPIO Pin in BCM mode, so for pin 26, you'd enter 7 (for GPIO7)
