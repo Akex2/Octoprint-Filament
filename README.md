@@ -10,9 +10,9 @@ The following needs to be added to the config.yaml:
     pauseOptions: 0
     pushbulletKey: xxxxxxxxxxxxxxxx
     pushbulletOption : 1
-	  temperatureOption : 0
-		homeXYOption : 1
-		temperature : 0
+    temperatureOption : 0
+    homeXYOption : 1
+    temperature : 0
     pushMessage : warning
 ```
 Option Descriptions:
