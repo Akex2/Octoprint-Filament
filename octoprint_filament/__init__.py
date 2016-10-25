@@ -13,10 +13,6 @@ import logging
 import logging.handlers
 import RPi.GPIO as GPIO
 
-#apiKey = "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
-#pb = PushBullet(apiKey)
-#devices = p.getDevices()
-#contacts = p.getContacts()
 
 class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 							octoprint.plugin.SettingsPlugin,
@@ -42,9 +38,12 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 		self.PAUSE_OPTIONS = self._settings.get(["pauseOptions"])
 		self.ZPAUSE = False # Z-Change Pause Flag
 		self.GPIO_OPTIONS = self._settings.get(["gpioOptions"])
-		self.APIKEY = self._settings.get(["pushbulletKey"])
-		self.pb = PushBullet(self.APIKEY)
-		self._logger.info("pushbullet api-key [%s]..."%self.APIKEY)
+		self.PUSHBULLET_OPTION = self._settings.get(["pushbulletOption"])
+		self._logger.info("pushbullet option [%s]..."%self.PUSHBULLET_OPTION)
+		self.TEMP_OPTION = self._settings.get(["temperatureOption"])
+		self._logger.info("temp option [%s]..."%self.TEMP_OPTION)
+		self.HOME_OPTION = self._settings.get(["homeXYOption"])
+		self._logger.info("home option [%s]..."%self.HOME_OPTION)
 		if self.GPIO_OPTIONS == 1:
 			self._logger.info("Filament Sensor Plugin setup on GPIO Options set to [%s]..."%self.GPIO_OPTIONS)
 			self.GPIO_OPTIONS = GPIO.PUD_UP
@@ -55,6 +54,16 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 		if self.PIN_FILAMENT != -1:
 			self._logger.info("Filament Sensor Plugin setup on GPIO [%s]..."%self.PIN_FILAMENT)
 			GPIO.setup(self.PIN_FILAMENT, GPIO.IN, pull_up_down = self.GPIO_OPTIONS ) #MODIFICATIONS - self.GPIO_OPTIONS
+		if self.PUSHBULLET_OPTION == 1:
+			self.APIKEY = self._settings.get(["pushbulletKey"])
+			self._logger.info("pushbullet api-key [%s]..."%self.APIKEY)
+			self.pb = PushBullet(self.APIKEY)
+			self.MESSAGE = self._settings.get(["pushMessage"])
+			self._logger.info("pushbullet message [%s]..."%self.MESSAGE)
+		if self.TEMP_OPTION == 1:
+			self._logger.info("temperature option [%s]..."%self.TEMP_OPTION)
+			self.TEMPERATURE = self._settings.get(["temperature"])
+			self._logger.info("temperature [%s]..."%self.TEMPERATURE)
 
 	def get_settings_defaults(self):
 		return dict(
@@ -62,6 +71,10 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 			bounce = 300,
 			gpioOptions = 0,
 			pauseOptions = 0,
+			pushbulletOption = 1,
+			temperatureOption = 0,
+			homeXYOption = 1,
+			temperature = 0,
 		)
 		
 	@octoprint.plugin.BlueprintPlugin.route("/status", methods=["GET"])
@@ -85,6 +98,12 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 		elif event == Events.Z_CHANGE and self.ZPAUSE == True:
 			self._printer.toggle_pause_print()
 			self.ZPAUSE = False
+			if self.PUSHBULLET_OPTION != 0:
+				push = self.pb.push_note(self.MESSAGE, " ")
+			if self.HOME_OPTION != 0:
+				self._printer.home(["x", "y"])
+			if self.TEMP_OPTION != 0:
+				self._printer.set_temperature("tool0", self.TEMPERATURE)
 
 	def setup_gpio(self):
 		try:
@@ -102,9 +121,15 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 			self._logger.debug("Sensor [%s]!"%state)
 			if self._printer.is_printing() and self.PAUSE_OPTIONS != 1:
 				self._printer.toggle_pause_print()
-				self._printer.home(["x", "y"])
-				self._printer.set_temperature("tool0", 40)
-				push = self.pb.push_note("Probleme de filament", " ")
+				if self.PUSHBULLET_OPTION != 0:
+					push = self.pb.push_note(self.MESSAGE, " ")
+					self._logger.debug("boucle push OK")
+				if self.HOME_OPTION != 0:
+					self._printer.home(["x", "y"])
+					self._logger.debug("boucle home OK")
+				if self.TEMP_OPTION != 0:
+					self._printer.set_temperature("tool0", self.TEMPERATURE)
+					self._logger.debug("boucle temps OK")
 			elif self._printer.is_printing():
 				self.ZPAUSE = True
 
@@ -130,9 +155,9 @@ class FilamentSensorPlugin(octoprint.plugin.StartupPlugin,
 		)
 
 __plugin_name__ = "Filament Sensor"
-__plugin_version__ = "1.0.1"
-__plugin_description__ = "Use a filament sensor to pause printing when filament runs out."
+__plugin_version__ = "1.0.2"
+__plugin_description__ = "Use a filament sensor to pause printing, home X Y axis, send a pushbullet notification, and set a temperature when filament runs out."
 
 def __plugin_load__():
 	global __plugin_implementation__
-	__plugin_implementation__ = FilamentSensorPlugin()
+__plugin_implementation__ = FilamentSensorPlugin()
